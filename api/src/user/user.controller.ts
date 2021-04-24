@@ -8,7 +8,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { User } from './models/user.interface';
 import { UserService } from './user.service';
 
@@ -16,23 +15,30 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  /* Login handler */
+  @Post('login')
+  login(@Body() user: Partial<User>) {
+    return this.userService.login(user);
+  }
+
+  /* Basic CRUD */
   @Post()
-  create(@Body() user: User): Observable<User> {
+  create(@Body() user: User): Promise<User> {
     return this.userService.create(user);
   }
 
   @Get()
-  findAll(): Observable<User[]> {
+  findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Observable<User> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.userService.findOne(id);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id', ParseIntPipe) id: number): Observable<any> {
+  deleteOne(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return this.userService.deleteOne(id);
   }
 
@@ -40,7 +46,7 @@ export class UserController {
   updateOne(
     @Param('id', ParseIntPipe) id: number,
     @Body() user: User,
-  ): Observable<any> {
+  ): Promise<any> {
     return this.userService.updateOne(id, user);
   }
 }
